@@ -40,7 +40,7 @@ Let's follow a sequence so we don't get lost and have a linear knowledge about t
 - Deep Double Q-Learning
 
 ### Q-Table
-Basically Q-Table is used to calculate the maximum expected future rewards for action at each state, so the table will lead us to the best action for each state. We will have a table with size equals to number of actions times number of states.
+Basically Q-Table is used to calculate the maximum expected future rewards for action at each state, so the table will lead us to the best action for each state. We will have a table with size equals to number of actions times number of states.<br>
 ![Q-Table][image3]<br>
 Alright so for each value in the Q-Table we call it Q-Value which uses Bellman equation to estimate it.
 ![Bellman Equation][image4]<br>

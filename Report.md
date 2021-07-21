@@ -10,6 +10,7 @@
 [image8]: https://paperswithcode.com/media/methods/b6cdb8f5-ea3a-4cca-9331-f951c984d63a_MBK7MUl.png "SARS Memory"
 [image9]: https://cdn.analyticsvidhya.com/wp-content/uploads/2019/04/Screenshot-2019-04-16-at-5.46.01-PM.png "Deep Q-Learning"
 [image10]: https://images3.programmersought.com/637/5d/5d4d7814d1fcdc7c8c5ffeee151721fd.png "Double Q-Learning"
+[image10]: imgs/neural_network "Neural Network"
 
 # Project 1: Navigation
 
@@ -46,9 +47,9 @@ Alright so for each value in the Q-Table we call it Q-Value which uses Bellman e
 ![Bellman Equation][image4]<br>
 The Q-Value is represented by given a state and action we will estimate the sum of the rewards with a discounted factor called gamma which stays between 0 and 1, values closer to 0 will tend to preserve recently rewards than previous rewards.
 ### Exploration / Exploitation Dilemma
-This dilemma is one of the hardest to think about, let's say that each time we play we have to decide between explore even more our enviroment and see which series of actions would lead to a highest rewards or keep what we know about the enviroment and continue to do the action that belongs the highest rewards, now, what should we do? Start exploring our enviroment and more often begins to exploit it? It's there any possible way to estimate when we need to explore the enviroment? Or even a heuristic? Well you will see about Epsilon Greedy in the next section which tries to solve this problem.
+This dilemma is one of the hardest to think about, let's say that each time we play we have to decide between explore even more our environment and see which series of actions would lead to a highest rewards or keep what we know about the environment and continue to do the action that belongs the highest rewards, now, what should we do? Start exploring our environment and more often begins to exploit it? It's there any possible way to estimate when we need to explore the environment? Or even a heuristic? Well you will see about Epsilon Greedy in the next section which tries to solve this problem.
 ### Epsilon Greedy
-Now that you know more about exploration / exploitation dilemma we can explain how Epsilon Greedy works, let's say we have a probability for those two actions, what epsilon greedy tries to do it's to generate a randomness into the algorithm, which force the agent to try different actions and not get stuck at a local minimum, so to implemente epsilon greedy we set a epsilon value between 0 and 1 where 0 we never explore but always exploit the knowledge that we already have and 1 do the opposite, after we set a value for epsilon we generate a random value usually from a normal distribution and if that value is bigger than epsilon we will choose the current best action otherwise we will choose a random action to explore the enviroment.
+Now that you know more about exploration / exploitation dilemma we can explain how Epsilon Greedy works, let's say we have a probability for those two actions, what epsilon greedy tries to do it's to generate a randomness into the algorithm, which force the agent to try different actions and not get stuck at a local minimum, so to implemente epsilon greedy we set a epsilon value between 0 and 1 where 0 we never explore but always exploit the knowledge that we already have and 1 do the opposite, after we set a value for epsilon we generate a random value usually from a normal distribution and if that value is bigger than epsilon we will choose the current best action otherwise we will choose a random action to explore the environment.
 ### Deep Q-Learning
 Q-Learning is a really good algorithm right? Now let's try to solve bigger problems with many many states and actions, let's suppose we have a problem that consists in 10.000 states and 1.000 actions we will have a table that equals to 10M cell to compute Q-Values, that would be a huge problem to solve computationally speaking and maybe takes too long to get a result, to deal with this problem we have Deep Q-Learning which takes the advantage of Neural Networks to compute Q-Values for each action given the state as the image below.
 ![Deep Q-Learning][image9]
@@ -61,7 +62,21 @@ One of many issues that we still have in DQN's is they can overestimate our Q-Va
 ![Double Q-Learning][image10]
 ## Solution
 My solution was take what i learned from the mini project with LunarLander and try to reproduce it as a generic model but with a little plus that implemented Double Q-Learning so we can see what little changes can make a huge impact on our agent.
-Note: Using also 64 neurons for FC layer and Gamma as 0.99 if you wanna go deeper check dqn_agent.py file which is all hyperparameters you need to know.
+For the Neural Network i used three FC layers where one takes the input as the state and forward to two FC Layers with 64 neurons and the last one give us the answer with 4 actions, for a better visualization check this summary here.<br>
+```bash
+State -> 64 -> ReLU -> 64 -> ReLU -> Action
+```
+If you wanna go deeper check dqn_agent.py file which is all hyperparameters you need to know.<br>
+At first i implemented a DQN and a Double DQN to deal with the overestimation for Q-Values, in both cases i used Experience Replay try to solve the rare events, for the hyperparameters for the agent in both models i used the following parameters:
+```python
+BUFFER_SIZE = int(1e5)  # replay buffer size
+BATCH_SIZE = 64         # minibatch size
+GAMMA = 0.99            # discount factor
+TAU = 1e-3              # for soft update of target parameters
+LR = 5e-4               # learning rate
+UPDATE_EVERY = 4        # how often to update the network
+```
+The image below shows up how took to each model get the requested max rewards.
 ![Model Comparison][image5]<br>
 As far we can see it reduced the number of episodes in our agent but just reduce the number of episodes is cool but are our agent in fact converging faster and what we could do for our next steps.
 ![Rewards Series][image6]<br>
@@ -72,8 +87,7 @@ Well thats good our DDQN agent is learning really faster, maybe because it's on 
 - Do a GridSearch to find optimal hyperparameters for DQN and DDQN models.
 - Add Convolutional and Dropout Layers in Neural Network and see if our model finds some patterns at the states.
 - Utilize Prioritized Experience Replay and see how much benefit we can extract from a weighted sample.
-- Try to implement a Noisy Net so for each output for the neural network that have some noise our agent will explore the enviroment leading to a better performance.
-
+- Try to implement a Noisy Net so for each output for the neural network that have some noise our agent will explore the environment leading to a better performance.
 
 ## Dependencies
 
@@ -112,3 +126,20 @@ python -m ipykernel install --user --name drlnd --display-name "drlnd"
 5. Before running code in a notebook, change the kernel to match the `drlnd` environment by using the drop-down `Kernel` menu. 
 
 ![Kernel][image2]
+
+## Running the Project
+
+First of all we have to downloa the environment 
+1. Download the environment from one of the links below.  You need only select the environment that matches your operating system:
+    - Linux: [click here](https://s3-us-west-1.amazonaws.com/udacity-drlnd/P1/Banana/Banana_Linux.zip)
+    - Mac OSX: [click here](https://s3-us-west-1.amazonaws.com/udacity-drlnd/P1/Banana/Banana.app.zip)
+    - Windows (32-bit): [click here](https://s3-us-west-1.amazonaws.com/udacity-drlnd/P1/Banana/Banana_Windows_x86.zip)
+    - Windows (64-bit): [click here](https://s3-us-west-1.amazonaws.com/udacity-drlnd/P1/Banana/Banana_Windows_x86_64.zip)
+    
+    (_For Windows users_) Check out [this link](https://support.microsoft.com/en-us/help/827218/how-to-determine-whether-a-computer-is-running-a-32-bit-version-or-64) if you need help with determining if your computer is running a 32-bit version or 64-bit version of the Windows operating system.
+
+    (_For AWS_) If you'd like to train the agent on AWS (and have not [enabled a virtual screen](https://github.com/Unity-Technologies/ml-agents/blob/master/docs/Training-on-Amazon-Web-Service.md)), then please use [this link](https://s3-us-west-1.amazonaws.com/udacity-drlnd/P1/Banana/Banana_Linux_NoVis.zip) to obtain the environment.
+
+2. Place the file in the `nd-navigation-project/` folder, and unzip (or decompress) the file.
+
+3. Now that we have it all to run the project all you gotta do is to open the `Navigation.ipynb` and run each cell, it's highly recommended to run it with GPU for faster results. When the train it's over it will save the weights for the model into a `.pth` file named `dqn_checkpoint` for DQN model and `ddqn_checkpoint` Double DQN model.
